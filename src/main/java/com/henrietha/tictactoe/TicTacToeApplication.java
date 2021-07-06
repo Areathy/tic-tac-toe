@@ -9,61 +9,70 @@ import java.util.Scanner;
 
 @SpringBootApplication
 public class TicTacToeApplication {
-	public static void main(String[] args) {
 
+	public static void main(String[] args) {
 		SpringApplication.run(TicTacToeApplication.class, args);
 
-		Scanner scanner = new Scanner(System.in);
-		boolean doYouWantToPay = true;
+		// Getting input
+		Scanner sc = new Scanner(System.in);
+		// Allows for cont. games
+		boolean doYouWantToPlay = true;
 
-		while (doYouWantToPay) {
-			System.out.println("Welcome. Please select your character and mine");
+		while (doYouWantToPlay) {
+			// Setting up our tokens and AI
+			System.out.println("Welcome to Tic Tac Toe! You are about to go against "
+					+ "the master of Tic Tac Toe. Are you ready? I hope so!\n BUT FIRST, you"
+					+ " must pick what character you want to be and which character I will be");
 			System.out.println();
-			System.out.println("Please enter a single character that will represent you.");
-			char playersToken = scanner.next().charAt(0);
-			System.out.println("Please enter a single character that will represent me");
-			char cpuToken = scanner.next().charAt(0);
-			TicTacToe game = new TicTacToe(playersToken, cpuToken);
+			System.out.println("Enter a single character that will represent you on the board");
+			char playerToken = sc.next().charAt(0);
+			System.out.println("Enter a single character that will represent your opponent on the board");
+			char opponentToken = sc.next().charAt(0);
+			TicTacToe game = new TicTacToe(playerToken, opponentToken);
 			AI ai = new AI();
 
-			//Set up
+			// Set up the game
 			System.out.println();
-			System.out.println("Let's start.");
+			System.out.println("Now we can start the game. To play, enter a number and your token shall be put "
+					+ "in its place.\nThe numbers go from 1-9, left to right. We shall see who will win this round.");
 			TicTacToe.printIndexBoard();
 			System.out.println();
 
-			//Let's play
+			// Let's play!
 			while (game.gameOver().equals("notOver")) {
 				if (game.currentMarker == game.userMarker) {
-					//User turn
-					System.out.println("Your turn");
-					int spot = scanner.nextInt();
-					while (!game.playTurn(spot)) {
-						System.out.println(spot + "not available");
-						spot = scanner.nextInt();
+					// USER TURN
+					System.out.println("It's your turn! Enter a spot for your token");
+					int spot = sc.nextInt();
+					while(!game.playTurn(spot)) {
+						System.out.println("Try again. " + spot + " is invalid. This spot is already taken"
+								+ " or it is out of range");
+						spot = sc.nextInt();
 					}
-					System.out.println("You picked" + spot + "!");
+					System.out.println("You picked "+ spot + "!");
 				} else {
-					//CPU turn
-					System.out.println("It's my turn");
+					// AI Turn
+					System.out.println("It's my turn!");
+					// Pick spot
 					int aiSpot = ai.pickSpot(game);
 					game.playTurn(aiSpot);
-					System.out.println("I picked" + aiSpot +"!");
+					System.out.println("I picked "+ aiSpot+ "!");
 				}
-				//Print out new board
+				// Print out new board
 				System.out.println();
 				game.printBoard();
 			}
 			System.out.println(game.gameOver());
 			System.out.println();
-
-			//Set up new game...or not
-			System.out.println("Replay? Enter y if you do or anything else if you don't. ");
-			char response = scanner.next().charAt(0);
-			doYouWantToPay = (response == 'y');
+			// Set up a new game... or not depending on the response
+			System.out.println("Do you want to play again? Enter Y if you do. "
+					+ "Enter anything else if you are tired of me.");
+			char response = sc.next().charAt(0);
+			doYouWantToPlay = (response == 'Y');
 			System.out.println();
 			System.out.println();
 		}
+
 	}
 
 }
