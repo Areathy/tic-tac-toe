@@ -1,17 +1,18 @@
 package com.henrietha.tictactoe.entity;
 
 public class TicTacToe {
+    public char currentMarker;
+    public char userMarker;
     protected char[] board;
-    private final char userMarker;
     protected char aiMarker;
     protected char winner;
-    protected char currentMaker;
 
-    public TicTacToe(char[] board, char playerToken, char winner, char currentMaker) {
+    public TicTacToe(char playerToken, char aiMarker) {
         this.userMarker = playerToken;
         this.aiMarker = aiMarker;
         this.winner = '-';
         this.board = setBoard();
+        this.currentMarker = userMarker;
     }
 
     public static char[] setBoard() {
@@ -25,8 +26,8 @@ public class TicTacToe {
     public boolean playTurn(int spot) {
         boolean isValid = withinRange(spot) && !isSpotTaken(spot);
         if(isValid) {
-            board[spot-1] = currentMaker;
-            currentMaker = (currentMaker == userMarker) ? aiMarker : userMarker;
+            board[spot-1] = currentMarker;
+            currentMarker = (currentMarker == userMarker) ? aiMarker : userMarker;
 //            return isValid;
         }
         return isValid;
@@ -61,10 +62,10 @@ public class TicTacToe {
         System.out.println();
     }
 
-    public void printIndexBoard() {
+    public static void printIndexBoard() {
 
         System.out.println();
-        for (int i = 0; i<board.length; i++) {
+        for (int i = 0; i<9; i++) {
             if(i % 3 == 0 && i !=0) {
                 System.out.println();
                 System.out.println("------------");
@@ -75,18 +76,21 @@ public class TicTacToe {
     }
 
     public boolean isThereAWinner() {
-        boolean diagonalsAndMidles = rightDi() || leftDi() || middleRow() || secondCol() && board[4] != '-';
-        boolean topAndFirst = topRow() || firstCol() && board[0] != '-';
-        boolean bottomAndThird = bottomRow() || thirdCol() && board[8] != '-';
+        boolean diagonalsAndMiddles = (rightDi() || leftDi() || middleRow() || secondCol()) && board[4] != '-';
+        boolean topAndFirst = (topRow() || firstCol()) && board[0] != '-';
+        boolean bottomAndThird = (bottomRow() || thirdCol()) && board[8] != '-';
 
-        if(diagonalsAndMidles) {
+        if(diagonalsAndMiddles) {
+            System.out.println("di");
             this.winner = board[4];
         } else if ( topAndFirst) {
+            System.out.println("m");
             this.winner = board[0];
         } else if (bottomAndThird) {
+            System.out.println("l");
             this.winner = board[8];
         }
-        return diagonalsAndMidles || topAndFirst || bottomAndThird;
+        return diagonalsAndMiddles || topAndFirst || bottomAndThird;
     }
 
     public boolean topRow() {
